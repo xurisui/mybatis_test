@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.cxh.mybatis.mapper.UserMapper">
+
+    <resultMap id="userResultMap" type="io.cxh.mybatis.po.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="birthday" property="birthday" jdbcType="DATE"/>
+        <result column="english_score" property="englishScore" jdbcType="INTEGER"/>
+
+
+    </resultMap>
+
+
+    <sql id="columns">
+        id, username, sex, birthday, address, english_score
+    </sql>
+
+
+
+    <select id="selectAll" resultMap="userResultMap">
+        SELECT <include refid="columns"/> FROM user
+    </select>
+
+    <select id="selectById" parameterType="int" resultMap="userResultMap">
+        SELECT <include refid="columns"/> FROM user
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="io.cxh.mybatis.po.User">
+        INSERT INTO user (<include refid="columns"/>)
+        VALUES (#{id}, #{username}, #{sex}, #{birthday}, #{address}, #{englishScore})
+    </insert>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM `user` WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="io.cxh.mybatis.po.User">
+        UPDATE user SET
+            username = #{username},
+            sex = #{sex},
+            birthday = #{birthday},
+            address = #{address},
+            english_score = #{englishScore}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateSelective" parameterType="io.cxh.mybatis.po.User">
+
+        UPDATE user
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+            <if test="address != null">
+                address = #{address},
+            </if>
+            <if test="englishScore != null">
+                english_score = #{englishScore}
+            </if>
+
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
